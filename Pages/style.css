@@ -275,40 +275,74 @@
     z-index: 1;
   }
 
+.site-footer {
+  background: rgba(26, 26, 26, 0.95);
+  border-top: 2px solid var(--primary-color);
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0.8rem 1.2rem;
+}
+
+.footer-left {
+  text-align: left;
+  flex: 1;
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.footer-center {
+  flex: 0 0 auto;
+}
+
+.footer-right {
+  text-align: right;
+  flex: 1;
+  min-width: 80px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Bubbles - use the improved smaller version */
 .footer-bubbles {
   display: flex;
-  justify-content: center;
   gap: 1rem;
-  margin: 0 auto;
-  padding: 0.5rem 0;
 }
 
 .bubble {
   display: grid;
   place-items: center;
-  width: 2.5rem;   /* Reduced from 3.5rem */
-  height: 2.5rem;  /* Reduced from 3.5rem */
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
-  background-color: var(--bg-color, #222);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  transition: transform 0.2s, background-color 0.2s;
+  background: var(--bg-color, #181818);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+  transition: transform 0.18s, background 0.2s;
 }
 
 .bubble:hover {
   transform: scale(1.1);
-  background-color: var(--primary-color);
+  background: var(--primary-color);
 }
 
-.bubble img {
-  width: 1.2rem;  /* Reduced from 1.5rem */
+.bubble img, .bubble svg {
+  width: 1.2rem;
   height: 1.2rem;
   filter: invert(0.85);
-  transition: filter 0.2s;
 }
 
-.bubble:hover img {
-  filter: invert(0.05);
+.bubble:hover img, .bubble:hover svg {
+  filter: invert(0.1);
 }
+
 
 
 
