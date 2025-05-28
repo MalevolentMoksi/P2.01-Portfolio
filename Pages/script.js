@@ -85,7 +85,7 @@ function drawTrail() {
   
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
-  ctx.lineWidth = 8;
+  ctx.lineWidth = 4;
   
   // Get the golden color from CSS variable
   const primaryColor = getComputedStyle(document.documentElement)
