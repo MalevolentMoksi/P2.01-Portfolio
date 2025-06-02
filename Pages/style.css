@@ -44,21 +44,13 @@ img:hover {
   box-shadow: 0 0 10px var(--primary-color);
 }
 
-/* Pulse animation */
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 5px var(--primary-color);
-  }
-  50% {
-    box-shadow: 0 0 15px var(--primary-color);
-  }
-  100% {
-    box-shadow: 0 0 5px var(--primary-color);
-  }
-}
 .presentation-block:hover {
-  animation: pulse 0.7s infinite;
+  animation: none; /* enlève l'animation pulse */
+  box-shadow: 0 0 18px var(--primary-color), 0 2px 16px rgba(0,0,0,0.28);
+  /* tu peux ajuster le flou ou la couleur ici */
+  transition: box-shadow 0.25s;
 }
+
 
 /* Gradient text for headings */
 h2,
@@ -95,7 +87,7 @@ body {
 
 /* Header */
 header {
-  background: rgba(26, 26, 26, 0.9); /* Fond semi-transparent */
+  background: rgba(26, 26, 26, 0.7); /* Fond semi-transparent */
   padding: 20px;
   border-bottom: 2px solid var(--primary-color);
   text-align: center;
@@ -114,9 +106,33 @@ nav ul {
   gap: 15px;
 }
 nav ul li a {
-  text-decoration: none;
+  display: inline-block;
+  padding: 0.55em 1.4em;
+  border-radius: 8px;                /* Coins un peu arrondis */
+  background: rgba(212, 175, 55, 0.13); /* Doré discret, transparent */
   color: var(--primary-color);
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 1.07rem;
+  border: 2px solid var(--primary-color);
+  box-shadow: none;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  transition: 
+    background 0.18s cubic-bezier(.39,.58,.57,1.25),
+    color 0.14s, 
+    border 0.18s;
+  margin: 0 7px;
+  text-shadow: none;
+  position: relative;
+}
+
+nav ul li a:hover,
+nav ul li a:focus {
+  background: rgba(212, 175, 55, 0.38);   /* Doré plus marqué au survol */
+  color: #fff8dc;                         /* Blanc cassé */
+  border-color: #fff8dc;
+  box-shadow: 0 2px 12px #d4af3740;
+  transform: translateY(-1.5px) scale(1.04);
 }
 
 /* Main container */
@@ -274,7 +290,7 @@ footer {
 
 /* Site footer layout */
 .site-footer {
-  background: rgba(26, 26, 26, 0.95);
+  background: rgba(26, 26, 26, 0.7);
   border-top: 2px solid var(--primary-color);
   color: var(--text-color);
   font-size: 1rem;
