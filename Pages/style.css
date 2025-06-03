@@ -525,3 +525,92 @@ main section {
   user-select: none;
   pointer-events: none;
 }
+
+/* ====================== */
+/* 1) GRILLE 2×2          */
+/* ====================== */
+.video-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* exactement 2 colonnes */
+  gap: 1rem;                              /* espacement entre items */
+  margin-top: 1.5rem;
+}
+
+/* Chaque item contient le wrapper + légende */
+.video-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* ====================== */
+/* 2) CONTENEUR VIDÉO     */
+/* ====================== */
+/* 
+   - background-color : fond noir avant que la vidéo ne joue,
+   - padding ou ratio pour forcer une hauteur uniforme (ex : 16:9),
+   - position: relative (pour pseudo-élément « play »).
+*/
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  /* Option A : on fixe la hauteur à un ratio 16:9 via padding-bottom */
+  padding-bottom: 56.25%;      /* 16/9 = 0.5625 → 56.25% du width */
+  background-color: #000;
+  overflow: hidden;            /* on masque tout ce qui dépasse */
+  border: 1px solid #444;
+  border-radius: 4px;
+}
+
+/* La balise <video> remplit tout le .video-wrapper */
+.video-wrapper video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: transparent;  /* la vidéo prendra le dessus dès qu'on jouera */
+}
+
+/* ====================== */
+/* 3) ICÔNE “PLAY” EN CSS  */
+/* ====================== */
+/* 
+   On ajoute un triangle blanc centré dans .video-wrapper.
+   Si la vidéo n'est pas encore lancée, on voit le triangle sur fond noir.
+   Dès que la vidéo se charge/commence, le contenu vidéo vient par-dessus.
+*/
+.video-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;    /* taille du triangle */
+  height: 40px;
+  background-image: 
+    url("data:image/svg+xml;utf8,\<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>\<polygon points='35,25 75,50 35,75' fill='white'/>\</svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  pointer-events: none; /* laisse passer le clic sur les contrôles vidéo */
+}
+
+/* 
+  Astuce : tant qu’on n'a pas cliqué, on voit l’overlay. 
+  Dès que la vidéo est en lecture, le premier frame recouvre le fond + l’icône.
+  Sur certains navigateurs, il peut parfois rester un bref flash. Si besoin, 
+  vous pouvez écouter en JS l’événement “playing” et cacher ce ::before, 
+  mais la plupart du temps les navigateurs remplacent directement le fond.
+*/
+
+/* ====================== */
+/* 4) LÉGENDE SOUS Vidéo   */
+/* ====================== */
+.video-item .caption {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #ddd;
+}
