@@ -82,7 +82,6 @@ body {
   color: var(--text-color);
   background-color: var(--bg-color);
   scroll-behavior: smooth;
-  cursor: url('custom-cursor.png'), auto;
 }
 
 /* Header */

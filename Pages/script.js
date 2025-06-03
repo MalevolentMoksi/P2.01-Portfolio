@@ -1,15 +1,17 @@
 // This script handles the sticky header and back-to-top button functionality, as well as the animation of blocks when they come into view.
 // Pages/script.js
 
+// Pages/script.js
+
 document.addEventListener('DOMContentLoaded', () => {
   // ======== 1. Define track file names and figure out correct path prefix ========
   const trackFiles = ['deepstone.m4a', 'browser.m4a', 'wildriver.m4a'];
+
   // At the very top of script.js (before you build trackURLs), insert:
   const pathParts = window.location.pathname.split('/');
   // Example for GitHub Pages: pathname might be "/P2.01-Portfolio/Pages/projets.html"
   // so pathParts[1] === "P2.01-Portfolio"
   const repoName = pathParts[1] || '';
-
 
   // Determine whether the current page is inside /Pages/ or not, to set the path to Music/
   // If the pathname contains '/Pages/', we need '../Music/<filename>'. Otherwise 'Music/<filename>'.
@@ -43,31 +45,55 @@ document.addEventListener('DOMContentLoaded', () => {
   audio.preload = 'metadata';
   audio.src = trackURLs[currentTrackIndex];
 
-  // Once metadata is loaded, set the last known time, and decide whether to play
+  // ─── Safe Autoplay Integration Starts Here ───
+  // Attempt a muted autoplay on load (browsers allow muted play).
+  // We’ll only unmute if the user has not explicitly paused last session (isPaused === false).
+
+  audio.muted = true;
+
   audio.addEventListener('loadedmetadata', () => {
     // If savedTime is beyond the duration (e.g. because track changed), clamp to 0
     if (savedTime >= audio.duration) {
       savedTime = 0;
     }
     audio.currentTime = savedTime;
+
+    // Only attempt play/unmute if user did not manually pause last session
     if (!isPaused) {
-      audio.play().catch(() => {
-        // Autoplay might be blocked; we leave it paused
+      audio.play()
+        .then(() => {
+          // After a tiny delay, unmute so the user hears sound
+          setTimeout(() => {
+            audio.muted = false;
+          }, 150);
+        })
+        .catch(() => {
+          // Autoplay (even muted) may be blocked in rare cases; 
+          // we’ll wait for a user click instead
+        });
+    }
+  });
+
+  // If the audio remains paused (and isPaused === false), 
+  // unmute & play on first user interaction
+  document.addEventListener('click', () => {
+    if (!isPaused && audio.paused) {
+      audio.play().then(() => {
+        audio.muted = false;
+      }).catch(() => {
+        // If still blocked, do nothing. Another click can try again.
       });
     }
   });
 
-  // Update localStorage whenever time updates (debounce throttle)
-  let progressThrottle = 0;
+  // ======== 4. Persist time and paused state ========
   audio.addEventListener('timeupdate', () => {
-    progressThrottle++;
-    if (progressThrottle % 2 === 0) { // roughly every 20ms
-      localStorage.setItem(STORAGE_KEYS.CURRENT_TIME, audio.currentTime.toString());
-      updateProgressBar();
-    }
+    // Every time the audio’s currentTime changes, store it
+    localStorage.setItem(STORAGE_KEYS.CURRENT_TIME, audio.currentTime.toString());
+    updateProgressBar();
   });
 
-  // When user pauses/plays, store that state
+  // When user pauses, record that so we don’t auto‐play next page load
   audio.addEventListener('pause', () => {
     isPaused = true;
     localStorage.setItem(STORAGE_KEYS.IS_PAUSED, 'true');
@@ -84,9 +110,17 @@ document.addEventListener('DOMContentLoaded', () => {
     switchToNextTrack();
   });
 
-  // ======== 4. Read metadata (title, artist, album art) for all tracks ========
-  // We’ll store an array of objects: { title, artist, pictureDataURL }
-  // ======== 4. Read metadata (title, artist, album art) for all tracks ========
+  // On unload, save everything one more time
+  window.addEventListener('beforeunload', () => {
+    localStorage.setItem(STORAGE_KEYS.CURRENT_TIME, audio.currentTime.toString());
+    localStorage.setItem(STORAGE_KEYS.IS_PAUSED, audio.paused.toString());
+    localStorage.setItem(STORAGE_KEYS.TRACK_INDEX, currentTrackIndex.toString());
+  });
+  // ─── Safe Autoplay Integration Ends Here ───
+
+
+  // ======== 5. Read metadata (title, artist, album art) for all tracks ========
+  // (unchanged except for using trackFiles rather than trackURLs)
   const trackMeta = trackFiles.map(() => ({
     title: 'Loading...',
     artist: '',
@@ -94,8 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }));
 
   trackFiles.forEach((filename, idx) => {
-    // Build an absolute URL that includes the repoName on GitHub Pages:
-    // e.g. "https://malevolentmoksi.github.io/P2.01-Portfolio/Music/browser.m4a"
+    // Build an absolute URL that includes the repoName on GitHub Pages
     const absoluteURL = `${window.location.origin}/${repoName}/Music/${filename}`;
 
     new jsmediatags.Reader(absoluteURL)
@@ -119,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
             trackMeta[idx].pictureDataURL = '';
           }
 
-          // If this is the current track, show its info immediately:
           if (idx === currentTrackIndex) {
             updateTrackInfoDisplay();
           }
@@ -136,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   });
 
-  // ======== 5. Build & insert the player’s HTML structure ========
+  // ======== 6. Build & insert the player’s HTML structure ========
   const playerContainer = document.createElement('div');
   playerContainer.id = 'music-player';
   playerContainer.innerHTML = `
@@ -149,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
         <span class="artist"></span>
       </div>
     </div>
-
     <div class="controls">
       <button id="play-pause-btn" title="Play/Pause">❚❚</button>
       <button id="next-btn" title="Next Track">»</button>
@@ -168,56 +199,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const nextBtn = playerContainer.querySelector('#next-btn');
   const progressBar = playerContainer.querySelector('.progress');
 
-  // ======== 6. Functions to update UI elements ========
+  // ======== 7. Functions to update UI elements ========
   function updateTrackInfoDisplay() {
     const meta = trackMeta[currentTrackIndex];
-
-    // 1) Update text
     titleEl.textContent = meta.title || trackFiles[currentTrackIndex];
     artistEl.textContent = meta.artist;
-
-    // 2) Update album art
     if (meta.pictureDataURL) {
       albumArtEl.src = meta.pictureDataURL;
     } else {
       albumArtEl.src = '';
     }
 
-    // 3) Now check for overflow & apply scroll animation if needed
+    // Check if we need to scroll title/artist (overflow) …
     applyScrollIfOverflow(titleEl);
     applyScrollIfOverflow(artistEl);
   }
-
-
-  /**
- * If the <span>’s scrollWidth > its container’s clientWidth, enable scrolling.
- * Otherwise, remove any scroll animation.
- *
- * @param {HTMLElement} spanEl   The <span> element containing text.
- */
-  function applyScrollIfOverflow(spanEl) {
-    // The parent of spanEl is .text-wrapper, which has overflow:hidden and fixed width
-    const container = spanEl.parentElement;
-    // Reset any old inline vars / classes
-    spanEl.classList.remove('scrolling');
-    spanEl.style.removeProperty('--scroll-distance');
-
-    // Must wait one tick so the browser renders the updated textContent
-    // (if updateTrackInfoDisplay just changed it). We can use requestAnimationFrame:
-    window.requestAnimationFrame(() => {
-      const scrollW = spanEl.scrollWidth;
-      const clientW = container.clientWidth;
-      if (scrollW > clientW + 1) {
-        // Compute how many pixels we need to shift left
-        const distance = scrollW - clientW;
-        // Set the CSS custom property:
-        spanEl.style.setProperty('--scroll-distance', distance + 'px');
-        // Add the class that triggers @keyframes scroll-text
-        spanEl.classList.add('scrolling');
-      }
-    });
-  }
-
 
   function updatePlayPauseButton() {
     if (audio.paused) {
@@ -233,11 +229,13 @@ document.addEventListener('DOMContentLoaded', () => {
     progressBar.style.width = percent + '%';
   }
 
-  // ======== 7. Handle user interactions ========
+  // ======== 8. Handle user interactions ========
   playPauseBtn.addEventListener('click', () => {
     if (audio.paused) {
-      audio.play().catch(() => {
-        // Might fail if autoplay is blocked; nothing special required
+      audio.play().then(() => {
+        audio.muted = false;
+      }).catch(() => {
+        // If still blocked, we leave it paused and wait for a click.
       });
     } else {
       audio.pause();
@@ -248,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
     switchToNextTrack();
   });
 
-  // ======== 8. Switch to next track logic ========
+  // ======== 9. Switch to next track logic ========
   function switchToNextTrack() {
     // Advance index
     currentTrackIndex = (currentTrackIndex + 1) % trackURLs.length;
@@ -260,27 +258,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Change audio source and load
     audio.src = trackURLs[currentTrackIndex];
+    // Keep muted-while-loading if user had not paused
+    if (!isPaused) {
+      audio.muted = true;
+    }
     updateTrackInfoDisplay();
     updatePlayPauseButton();
 
-    // If user was playing before switching, autostart; otherwise remain paused
+    // If user was playing before switching, autostart (muted), then unmute
     if (!isPaused) {
-      audio.play().catch(() => { /* ignore */ });
+      audio
+        .play()
+        .then(() => {
+          setTimeout(() => {
+            audio.muted = false;
+          }, 150);
+        })
+        .catch(() => {
+          // Will wait for next click if blocked
+        });
     }
   }
 
-  // ======== 9. Initialize display once ========
+  // ======== 10. Scrolling overflow helper ========
+  function applyScrollIfOverflow(spanEl) {
+    const container = spanEl.parentElement;
+    spanEl.classList.remove('scrolling');
+    spanEl.style.removeProperty('--scroll-distance');
+    window.requestAnimationFrame(() => {
+      const scrollW = spanEl.scrollWidth;
+      const clientW = container.clientWidth;
+      if (scrollW > clientW + 1) {
+        const distance = scrollW - clientW;
+        spanEl.style.setProperty('--scroll-distance', distance + 'px');
+        spanEl.classList.add('scrolling');
+      }
+    });
+  }
+
+  // ======== 11. Initialize display once ========
   updateTrackInfoDisplay();
   updatePlayPauseButton();
   updateProgressBar();
-
-  // If the user leaves/refreshes, save current time immediately
-  window.addEventListener('beforeunload', () => {
-    localStorage.setItem(STORAGE_KEYS.CURRENT_TIME, audio.currentTime.toString());
-    localStorage.setItem(STORAGE_KEYS.IS_PAUSED, audio.paused.toString());
-    localStorage.setItem(STORAGE_KEYS.TRACK_INDEX, currentTrackIndex.toString());
-  });
 });
+
 
 
 const blocks = document.querySelectorAll('.presentation-block');
