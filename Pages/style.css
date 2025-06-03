@@ -680,3 +680,138 @@ main section {
 @view-transition {
   navigation: auto;
 }
+
+/* ============================= */
+/* Bottom‐left Sticky Music Player */
+/* ============================= */
+#music-player {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 280px;
+  background: rgba(26, 26, 26, 0.85); /* semi‐transparent dark */
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  z-index: 9999;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  color: var(--text-color);
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Album art thumbnail */
+#music-player img.album-art {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 10px;
+  background-color: #222;
+}
+
+/* Track info (title/artist) */
+#music-player .track-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ============================= */
+/* Scrolling Title/Artist Labels */
+/* ============================= */
+
+#music-player .track-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* ensure children don’t spill out */
+}
+
+/* Wrap each line (title and artist) in a fixed-width flex container */
+#music-player .track-info .text-wrapper {
+  width: 100%;
+  overflow: hidden;       /* clip any overflow */
+  position: relative;     /* for the child to translate within */
+  height: 1.3em;          /* slightly taller to avoid clipping */
+  display: flex;          /* center the span vertically */
+  align-items: center;    /* vertical centering */
+}
+
+/* The actual <span> that holds the text */
+#music-player .track-info .text-wrapper span {
+  display: inline-block;
+  white-space: nowrap;
+  position: relative;     /* so transform: translateX() works */
+  left: 0;
+  will-change: transform;
+  line-height: 1.3em;     /* match wrapper height so no clipping */
+}
+
+/* When we add the .scrolling class, it animates back and forth */
+#music-player .track-info .text-wrapper span.scrolling {
+  animation: scroll-text 6s ease-in-out infinite;
+}
+
+@keyframes scroll-text {
+  0%   { transform: translateX(0); }
+  50%  { transform: translateX(calc(-1 * var(--scroll-distance))); }
+  100% { transform: translateX(0); }
+}
+
+
+/* Optional: you can tweak the 6s duration to be faster/slower */
+
+
+#music-player .track-info .title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+#music-player .track-info .artist {
+  font-size: 0.83rem;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+/* Controls column (play/pause, next) */
+#music-player .controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 8px;
+}
+
+#music-player .controls button {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin: 2px 0;
+  transition: transform 0.15s;
+}
+
+#music-player .controls button:hover {
+  transform: scale(1.1);
+}
+/* Move the progress bar up and inset it 4px from each side of #music-player */
+#music-player .progress-container {
+  position: absolute;
+  left: 4px;                     /* 4 px inside the left border */
+  bottom: 4px;                   /* 4 px above the bottom border */
+  width: calc(100% - 8px);       /* parent padding-box width minus 8 px = 4 px inset on left and right */
+  height: 4px;
+  background: #333;
+  border-radius: 2px;            /* round its own corners */
+  overflow: hidden;
+}
+
+#music-player .progress {
+  width: 0%;
+  height: 100%;
+  background: var(--primary-color);
+  border-radius: 2px;            /* round the filled portion, too */
+  transition: width 0.1s linear;
+}
