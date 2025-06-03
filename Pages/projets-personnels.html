@@ -30,12 +30,12 @@
         <h2>Bot Discord “Moksi's Bazaar”</h2>
         <img src="../Images/discord-bot-icon.png" alt="Icône du Bot Discord" style="max-width:150px;">
         <p>
-          Développement d’un bot Discord en Python (ou JS : précise le langage utilisé) capable d’automatiser des
+          Développement d’un bot Discord en Python (ou JS : précise le langage utilisé) capable d’automatiser des
           tâches, modérer un serveur et fournir des commandes interactives pour les utilisateurs.
         </p>
         <ul>
           <li><b>Compétences :</b> API Discord, programmation événementielle, gestion des permissions</li>
-          <li><b>Techniques :</b> Python (discord.py) ou Node.js (discord.js), hébergement, gestion d’events, logs</li>
+          <li><b>Techniques :</b> Python (discord.py) ou Node.js (discord.js), hébergement, gestion d’events, logs</li>
         </ul>
         <a href="https://github.com/TON_GITHUB/BOT" class="btn" target="_blank">Voir le code sur GitHub</a>
       </article>
@@ -47,47 +47,77 @@
         <h2>Jeux réalisés sur Scratch</h2>
         <img src="../Images/scratch-logo.png" alt="Logo Scratch" style="max-width:140px;">
         <p>
-          Une collection de jeux interactifs et éducatifs développés sur la plateforme Scratch, illustrant la créativité
-          et la logique algorithmique : <br>
-          <b>Exemples :</b> <i>Space Invaders Custom</i>, <i>Platformer</i>, <i>Jeu de réflexion</i>…
+          En CM2, j'ai été introduit au logiciel en ligne Scratch par mon professeur.
+          Cela a consommé une bonne parti de mon temps personnel que j'ai passé à faire des jeux jusqu'en 20 <br>
+          <b>Exemples :</b> <i>Space Invaders Custom</i>, <i>Platformer</i>, <i>Jeu de réflexion</i>…
         </p>
         <ul>
           <li><b>Compétences :</b> Logique algorithmique, design d’interfaces, animations, gestion de variables et de
             sprites</li>
-          <li><b>Techniques :</b> Utilisation avancée de Scratch, optimisation des scripts, adaptation aux feedbacks
+          <li><b>Techniques :</b> Utilisation avancée de Scratch, optimisation des scripts, adaptation aux feedbacks
             utilisateurs</li>
         </ul>
         <a href="https://scratch.mit.edu/users/TON_PSEUDO/" class="btn" target="_blank">Voir mon profil Scratch</a>
-        <!-- Option : tu peux mettre plusieurs liens vers des projets phares ici -->
+      </article>
+
+      <hr>
+
+      <!-- Projet 3 : Dessins personnels -->
       <article class="project">
-  <h2>Dessins personnels</h2>
-  <div class="presentation-grid">
-    <!-- Drawing 1 -->
-    <div class="presentation-block visible">
-      <img src="../Images/drawing1.jpg" alt="Dessin 1" style="max-width:100%; border-radius:8px;">
-      <p>Portrait digital – Réalisé sur tablette graphique (2024)</p>
-    </div>
-    <!-- Drawing 2 -->
-    <div class="presentation-block visible">
-      <img src="../Images/drawing2.jpg" alt="Dessin 2" style="max-width:100%; border-radius:8px;">
-      <p>Fanart “Destiny 2” – Illustration vectorielle</p>
-    </div>
-    <!-- Drawing 3 -->
-    <div class="presentation-block visible">
-      <img src="../Images/drawing3.jpg" alt="Dessin 3" style="max-width:100%; border-radius:8px;">
-      <p>Paysage nocturne – Encre et feutres (2023)</p>
-    </div>
-    <!-- Drawing 4 -->
-    <div class="presentation-block visible">
-      <img src="../Images/drawing4.jpg" alt="Dessin 4" style="max-width:100%; border-radius:8px;">
-      <p>Concept art science-fiction – Photoshop</p>
-    </div>
-  </div>
-</article>
+        <h2>Dessins personnels</h2>
 
+        <!-- 3×2 grid of images -->
+
+        <!-- Texte d'intro pour la galerie de dessins -->
+        <div class="drawings-intro">
+          <p>
+            Depuis Janvier 2025, je me suis lancé dans le dessin numérique et traditionnel. Voici quelques-unes de mes
+            illustrations, réalisées au crayon (2H à 6B) ou numériquement.
+            J'explore différents styles et techniques, mais cela reste avant tout un hobby pour moi.
+          </p>
+        </div>
+
+        <div class="drawings-grid">
+          <div class="drawing-item">
+            <img class="zoomable" src="../Images/drawings/ADA1.jpg" alt="ADA-1 de Destiny 2 au crayon">
+            <p>ADA-1 de Destiny 2 – Portrait au crayon</p>
+          </div>
+
+          <div class="drawing-item">
+            <img class="zoomable" src="../Images/drawings/Goat.jpg" alt="Illustration rapide au crayon">
+            <p>Goat de Cult of the Lamb – Illustration rapide au crayon</p>
+          </div>
+
+          <div class="drawing-item">
+            <img class="zoomable" src="../Images/drawings/EBray.jpg" alt="Illustration au crayon">
+            <p>Exo Stranger de Destiny 2 – Illustration au crayon</p>
+          </div>
+
+          <div class="drawing-item">
+            <img class="zoomable" src="../Images/drawings/RTL.png" alt="Illustration numérique">
+            <p>Raven Team Leader – Illustration numérique</p>
+          </div>
+
+          <div class="drawing-item">
+            <img class="zoomable" src="../Images/drawings/GoatLamb.jpg" alt="Dessin au stylo">
+            <p>Goat &amp; Lamb de Cult of the Lamb – Illustration au crayon</p>
+          </div>
+
+          <div class="drawing-item">
+            <img class="zoomable" src="../Images/drawings/ElsiePortrait.webp" alt="Illustration numérique">
+            <p>Exo Stranger de Destiny 2 – Illustration numérique</p>
+          </div>
+        </div>
+      </article>
     </section>
-
   </main>
+
+  <!-- Lightbox / Modal -->
+  <div id="lightbox-overlay" class="hidden">
+    <span id="lightbox-close">&times;</span>
+    <img id="lightbox-img" src="" alt="Aperçu agrandi">
+    <p id="lightbox-caption"></p>
+  </div>
 
   <footer class="site-footer">
     <div class="footer-inner">
@@ -115,9 +145,10 @@
       </div>
     </div>
   </footer>
+
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <script src="script.js"></script>
   <script>
+    // Mise à jour de l'horloge
     function updateFooterClock() {
       const el = document.getElementById('footer-clock');
       if (!el) return;
@@ -126,6 +157,31 @@
     }
     setInterval(updateFooterClock, 1000);
     updateFooterClock();
+
+    // Lightbox / Modal pour agrandir l'image au clic
+    document.addEventListener('DOMContentLoaded', () => {
+      const overlay = document.getElementById('lightbox-overlay');
+      const overlayImg = document.getElementById('lightbox-img');
+      const overlayCaption = document.getElementById('lightbox-caption');
+      const closeBtn = document.getElementById('lightbox-close');
+
+      // Quand on clique sur une image ".zoomable"
+      document.querySelectorAll('.zoomable').forEach(img => {
+        img.style.cursor = 'pointer';
+        img.addEventListener('click', () => {
+          overlayImg.src = img.src;
+          overlayImg.alt = img.alt;
+          overlayCaption.textContent = img.nextElementSibling?.textContent || '';
+          overlay.classList.remove('hidden');
+        });
+      });
+
+      // Fermer au clic sur la croix (×) ou en cliquant hors de l'image
+      closeBtn.addEventListener('click', () => overlay.classList.add('hidden'));
+      overlay.addEventListener('click', e => {
+        if (e.target === overlay) overlay.classList.add('hidden');
+      });
+    });
   </script>
 </body>
 
