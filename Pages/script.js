@@ -86,17 +86,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ======== 4. Read metadata (title, artist, album art) for all tracks ========
   // We’ll store an array of objects: { title, artist, pictureDataURL }
-  const trackMeta = trackURLs.map(() => ({
+  // ======== 4. Read metadata (title, artist, album art) for all tracks ========
+  const trackMeta = trackFiles.map(() => ({
     title: 'Loading...',
     artist: '',
     pictureDataURL: '' // fallback blank
   }));
 
-  trackURLs.forEach((url, idx) => {
-    // Build an absolute URL so jsmediatags can reliably XHR it:
-    // Just use the relative URL. The browser will resolve it correctly on GitHub Pages:
-    const relativeURL = url;
-     const absoluteURL = `${window.location.origin}/${repoName}/Music/${filename}`;
+  trackFiles.forEach((filename, idx) => {
+    // Build an absolute URL that includes the repoName on GitHub Pages:
+    // e.g. "https://malevolentmoksi.github.io/P2.01-Portfolio/Music/browser.m4a"
+    const absoluteURL = `${window.location.origin}/${repoName}/Music/${filename}`;
 
     new jsmediatags.Reader(absoluteURL)
       .setTagsToRead(["title", "artist", "picture"])
@@ -119,14 +119,14 @@ document.addEventListener('DOMContentLoaded', () => {
             trackMeta[idx].pictureDataURL = '';
           }
 
-          // If this is the current track, display right away:
+          // If this is the current track, show its info immediately:
           if (idx === currentTrackIndex) {
             updateTrackInfoDisplay();
           }
         },
         onError: error => {
           console.warn(`jsmediatags error for ${absoluteURL}:`, error);
-          trackMeta[idx].title = trackFiles[idx];
+          trackMeta[idx].title = filename;
           trackMeta[idx].artist = '';
           trackMeta[idx].pictureDataURL = '';
           if (idx === currentTrackIndex) {
