@@ -88,9 +88,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   trackURLs.forEach((url, idx) => {
     // Build an absolute URL so jsmediatags can reliably XHR it:
-    const absoluteURL = window.location.origin + '/' + url;
+    // Just use the relative URL. The browser will resolve it correctly on GitHub Pages:
+    const relativeURL = url;
 
-    new jsmediatags.Reader(absoluteURL)
+    new jsmediatags.Reader(relativeURL)
       .setTagsToRead(["title", "artist", "picture"])
       .read({
         onSuccess: tag => {
