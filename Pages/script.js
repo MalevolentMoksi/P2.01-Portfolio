@@ -4,6 +4,12 @@
 document.addEventListener('DOMContentLoaded', () => {
   // ======== 1. Define track file names and figure out correct path prefix ========
   const trackFiles = ['deepstone.m4a', 'browser.m4a', 'wildriver.m4a'];
+  // At the very top of script.js (before you build trackURLs), insert:
+  const pathParts = window.location.pathname.split('/');
+  // Example for GitHub Pages: pathname might be "/P2.01-Portfolio/Pages/projets.html"
+  // so pathParts[1] === "P2.01-Portfolio"
+  const repoName = pathParts[1] || '';
+
 
   // Determine whether the current page is inside /Pages/ or not, to set the path to Music/
   // If the pathname contains '/Pages/', we need '../Music/<filename>'. Otherwise 'Music/<filename>'.
@@ -90,8 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Build an absolute URL so jsmediatags can reliably XHR it:
     // Just use the relative URL. The browser will resolve it correctly on GitHub Pages:
     const relativeURL = url;
+     const absoluteURL = `${window.location.origin}/${repoName}/Music/${filename}`;
 
-    new jsmediatags.Reader(relativeURL)
+    new jsmediatags.Reader(absoluteURL)
       .setTagsToRead(["title", "artist", "picture"])
       .read({
         onSuccess: tag => {
@@ -163,23 +170,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ======== 6. Functions to update UI elements ========
   function updateTrackInfoDisplay() {
-  const meta = trackMeta[currentTrackIndex];
+    const meta = trackMeta[currentTrackIndex];
 
-  // 1) Update text
-  titleEl.textContent = meta.title || trackFiles[currentTrackIndex];
-  artistEl.textContent = meta.artist;
+    // 1) Update text
+    titleEl.textContent = meta.title || trackFiles[currentTrackIndex];
+    artistEl.textContent = meta.artist;
 
-  // 2) Update album art
-  if (meta.pictureDataURL) {
-    albumArtEl.src = meta.pictureDataURL;
-  } else {
-    albumArtEl.src = '';
+    // 2) Update album art
+    if (meta.pictureDataURL) {
+      albumArtEl.src = meta.pictureDataURL;
+    } else {
+      albumArtEl.src = '';
+    }
+
+    // 3) Now check for overflow & apply scroll animation if needed
+    applyScrollIfOverflow(titleEl);
+    applyScrollIfOverflow(artistEl);
   }
-
-  // 3) Now check for overflow & apply scroll animation if needed
-  applyScrollIfOverflow(titleEl);
-  applyScrollIfOverflow(artistEl);
-}
 
 
   /**
