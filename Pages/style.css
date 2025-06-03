@@ -518,3 +518,10 @@ main section {
   font-size: 1.15em;
   color: var(--text-color, #222); /* ou la couleur principale de votre site */
 }
+
+.email-glitch-js{
+  font-family: monospace;
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+}

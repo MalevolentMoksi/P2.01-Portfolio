@@ -221,3 +221,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+
+// ===== Mini "glitch" animé en JS pur ===============================
+document.addEventListener("DOMContentLoaded", () => {
+  const target = document.querySelector(".local-part");
+  if (!target) return;
+
+  const GLITCH_LENGTH = 10;            // nombre de caractères fictifs
+  const GLITCH_CHARS = "█▓▒░";         // jeu de symboles
+  const INTERVAL     = 400;            // ms entre 2 frames
+
+  // génère une chaine aléatoire de longueur n
+  const randomString = (n) =>
+    Array.from({ length: n }, () =>
+      GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)]
+    ).join("");
+
+  // boucle d'animation
+  setInterval(() => {
+    target.textContent = randomString(GLITCH_LENGTH);
+  }, INTERVAL);
+});
