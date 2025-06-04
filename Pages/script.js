@@ -271,7 +271,7 @@ trackFiles.forEach((filename, idx) => {
   }
 
   // ======== 8. Handle user interactions ========
-  playPauseBtn.addEventListener('click', () => {
+    playPauseBtn.addEventListener('click', () => {
     if (audio.paused) {
       audio.play().then(() => {
         audio.muted = false;
@@ -279,6 +279,10 @@ trackFiles.forEach((filename, idx) => {
         // If still blocked, we leave it paused and wait for a click.
       });
     } else {
+      // Mark as paused immediately so the document-level click handler
+      // doesn't auto-resume the playback before the "pause" event fires
+      isPaused = true;
+      localStorage.setItem(STORAGE_KEYS.IS_PAUSED, 'true');
       audio.pause();
     }
   });
