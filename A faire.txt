@@ -1,0 +1,2 @@
+- Retirer projets non intéressant pour le futur
+- Renommer SAE en projets
