@@ -961,3 +961,56 @@ main section {
   /* On s'assure qu'aucun box-shadow n'est ajouté au survol */
   box-shadow: none !important; 
 }
+
+/* ===== Alignement logo à côté du titre (projets-personnels) ===== */
+.title-with-logo {
+  display: flex;
+  align-items: flex-end; /* Aligne le bas du titre avec le bas du logo */
+  gap: 15px; /* Espace entre le titre et le logo */
+  
+  /* On transfère les styles de soulignement du h2 vers ce conteneur */
+  position: relative;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.title-with-logo::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 50px;
+  height: 3px;
+  background: var(--primary-color);
+  border-radius: 2px;
+}
+
+/* On retire les styles de soulignement du h2 qui est *dans* ce conteneur */
+.title-with-logo h2 {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none; 
+}
+.title-with-logo h2::before {
+  display: none; /* On cache le pseudo-élément ::before du h2 */
+}
+
+/* On s'assure que l'image du logo a la bonne taille et aucun effet parasite */
+.title-with-logo img {
+  width: 45px; 
+  height: 45px;
+  object-fit: contain;
+  
+  /* On réinitialise les styles globaux pour cette image */
+  margin: 0;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  transform: none;
+}
+
+.title-with-logo img:hover {
+  /* On réinitialise aussi le hover global */
+  transform: none;
+  box-shadow: none;
+}
