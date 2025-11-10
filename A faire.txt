@@ -1,4 +1,2 @@
-- Retirer projets non intéressant pour le futur
-- Renommer SAE en projets
-- Bouger Parcours, ajouter soft skills, améliorer compéteces 
+- Bouger Parcours, ajouter soft skills, améliorer compétences 
 - Mettre les logos des compétences et programmes que j'utilisent
